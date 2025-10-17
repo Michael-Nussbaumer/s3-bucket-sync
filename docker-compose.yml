@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  hetzner-sync:
+  s3-sync:
     build: .
     environment:
       SRC_ACCESS_KEY: "$SRC_ACCESS_KEY"
