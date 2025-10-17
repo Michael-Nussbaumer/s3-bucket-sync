@@ -1,15 +1,34 @@
 version: "3.8"
 
 services:
-  s3-sync:
-    build: .
+  bucket-sync:
+    image: rclone/rclone:latest
+    container_name: bucket-sync
+    env_file:
+      - .env
     environment:
-      SRC_ACCESS_KEY: "$SRC_ACCESS_KEY"
-      SRC_SECRET_KEY: "$SRC_SECRET_KEY"
-      SRC_ENDPOINT: "$SRC_ENDPOINT"
-      SRC_BUCKET: "$SRC_BUCKET"
+      # --- Source remote ---
+      RCLONE_CONFIG_SRC_TYPE: s3
+      RCLONE_CONFIG_SRC_PROVIDER: ${SRC_PROVIDER}
+      RCLONE_CONFIG_SRC_ACCESS_KEY_ID: ${SRC_ACCESS_KEY}
+      RCLONE_CONFIG_SRC_SECRET_ACCESS_KEY: ${SRC_SECRET_KEY}
+      RCLONE_CONFIG_SRC_REGION: ${SRC_REGION}
+      RCLONE_CONFIG_SRC_ENDPOINT: ${SRC_ENDPOINT}
 
-      DST_ACCESS_KEY: "$DST_ACCESS_KEY"
-      DST_SECRET_KEY: "$DST_SECRET_KEY"
-      DST_ENDPOINT: "$DST_ENDPOINT"
-      DST_BUCKET: "$DST_BUCKET"
+      # --- Destination remote ---
+      RCLONE_CONFIG_DST_TYPE: s3
+      RCLONE_CONFIG_DST_PROVIDER: ${DST_PROVIDER}
+      RCLONE_CONFIG_DST_ACCESS_KEY_ID: ${DST_ACCESS_KEY}
+      RCLONE_CONFIG_DST_SECRET_ACCESS_KEY: ${DST_SECRET_KEY}
+      RCLONE_CONFIG_DST_REGION: ${DST_REGION}
+      RCLONE_CONFIG_DST_ENDPOINT: ${DST_ENDPOINT}
+
+    # Command: sync from SRC to DST
+    command: >
+      sync SRC:${SRC_BUCKET} DST:${DST_BUCKET}
+      --progress
+      --fast-list
+      --create-empty-src-dirs
+      --s3-no-check-bucket
+      --s3-acl private
+      --delete-during
