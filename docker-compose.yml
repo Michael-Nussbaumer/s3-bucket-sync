@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  hetzner-sync:
+    build: .
+    environment:
+      SRC_ACCESS_KEY: "$SRC_ACCESS_KEY"
+      SRC_SECRET_KEY: "$SRC_SECRET_KEY"
+      SRC_ENDPOINT: "$SRC_ENDPOINT"
+      SRC_BUCKET: "$SRC_BUCKET"
+
+      DST_ACCESS_KEY: "$DST_ACCESS_KEY"
+      DST_SECRET_KEY: "$DST_SECRET_KEY"
+      DST_ENDPOINT: "$DST_ENDPOINT"
+      DST_BUCKET: "$DST_BUCKET"
